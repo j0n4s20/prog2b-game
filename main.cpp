@@ -10,3 +10,5 @@ int main()
    endwin();
    return(0);
 }
+
+/* ich bin ein Kommentar */
