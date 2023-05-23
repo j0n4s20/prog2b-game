@@ -2,6 +2,8 @@
 #include "util.h"
 #include <ncurses.h>
 
+//test kommentar
+
 // Spielfeldgröße
 const int FIELD_WIDTH = 20;
 const int FIELD_HEIGHT = 10;
