@@ -1,8 +1,7 @@
 #include "game.h"
 #include "util.h"
 #include <ncurses.h>
-
-//test kommentar
+//original
 
 // Spielfeldgröße
 const int FIELD_WIDTH = 20;
@@ -42,35 +41,15 @@ void drawField() {
     refresh();
 }
 
-// Funktion zum Bewegen des Spielers
-void movePlayer(int dx, int dy) {
-    // Überprüfe Kollisionen mit Hindernis
-    if (playerX + dx == obstacleX && playerY + dy == obstacleY) {
-        gameOver = true;
-        return;
-    }
-
-    // Bewege den Spieler
-    playerX += dx;
-    playerY += dy;
-
-    // Überprüfe, ob der Spieler den Boden erreicht hat
-    if (playerY >= FIELD_HEIGHT - 2) {
-        isJumping = false;
-        jumpCount = 0;
-        playerY = FIELD_HEIGHT - 2;
-    }
-}
-
 // Funktion zum Springen des Spielers
 void jump() {
-    // Überprüfe, ob der Spieler bereits springt oder den Boden erreicht hat
-    if (isJumping || playerY >= FIELD_HEIGHT - 2) {
-        return;
-    }
+    // Ursprünglich: "Überprüfe, ob der Spieler bereits springt oder ob er Boden erreicht hat:" // if (isJumping|| playerY >= FIELD_HEIGHT - 2) { return; }
 
     // Starte den Sprung
-    isJumping = true;
+    if (!isJumping) {
+        isJumping = true;
+        jumpCount = 0;
+    }
 }
 
 // Funktion zur Aktualisierung des Spiels
@@ -89,13 +68,26 @@ void update() {
         obstacleX = FIELD_WIDTH - 3;
     }
 
-    // Wenn der Spieler gerade springt, aktualisiere die Sprunghöhe
+    //Wenn Spieler springt aktualisiere Sprunghöhe
     if (isJumping) {
         jumpCount++;
+        playerY--;
+
+        // Überprüfe, ob die maximale Sprunghöhe erreicht wurde
         if (jumpCount >= jumpHeight) {
-            isJumping = false;
-            jumpCount = 0;
+            isJumping = false; // Beende den Sprung
+            jumpCount = 0; // Setze den Sprungzähler zurück
         }
+    } else {
+        // Wenn der Spieler nicht springt, fällt er nach unten
+        if (playerY < FIELD_HEIGHT - 2) {
+            playerY++;
+        }
+    }
+    
+    // Begrenze die Spielerposition nach unten
+    if (playerY >= FIELD_HEIGHT - 2) {
+        playerY = FIELD_HEIGHT - 2;
     }
 }
 
@@ -129,9 +121,6 @@ void gameLoop() {
 
         int input = getch();
         switch (input) {
-            case KEY_UP:
-                movePlayer(0, -1);
-                break;
             case ' ':
                 jump();
                 break;
