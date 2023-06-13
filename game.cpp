@@ -1,7 +1,16 @@
 #include "game.h"
 #include "util.h"
 #include <ncurses.h>
-//original
+
+//Text-und Zeitanzeige
+int textX = 5;
+int textY = 0;
+int level = 1;
+
+//Counter für laufende Spielzeit
+int timeCount = 1;
+//Counter-Zeit für nächstes Hinderniss/Level
+int lvl2 = 40;
 
 // Spielfeldgröße
 const int FIELD_WIDTH = 20;
@@ -13,7 +22,7 @@ int playerY = FIELD_HEIGHT - 2;
 
 // Sprungstatus
 bool isJumping = false;
-int jumpHeight = 3;
+int jumpHeight = 4;
 int jumpCount = 0;
 
 // Hindernisposition
@@ -30,13 +39,25 @@ void drawField() {
     // Zeichne den Spieler
     mvprintw(playerY, playerX, "P");
 
+    if (timeCount > lvl2){
+        mvprintw(obstacleY, obstacleX, "HH");
+    } else {
     // Zeichne das Hindernis
     mvprintw(obstacleY, obstacleX, "H");
+    }
 
     // Zeichne den Boden
     for (int x = 0; x < FIELD_WIDTH; ++x) {
         mvprintw(FIELD_HEIGHT - 1, x, "=");
     }
+
+    //Levelanzeige
+    if (timeCount > lvl2){
+        mvprintw(textY, textX, " Level 2");
+    } else {
+        mvprintw(textY, textX, " Level 1");
+    }
+
 
     refresh();
 }
@@ -52,15 +73,56 @@ void jump() {
     }
 }
 
+void gameOverArt() {
+    // Set initial coordinates
+    int x = 0;
+    int y = 0;
+
+    // Loop for moving the ASCII art
+    for (int i = 0; i < 8; ++i) {
+        clear();  // Clear the screen
+
+        // Print ASCII art using mvprintw
+        mvprintw(y, x,       "---------------------");
+        mvprintw(y + 1, x, "     GAME OVER     ");
+        mvprintw(y + 2, x, "---------------------");
+
+        
+        refresh();  // Refresh the screen to display the output
+
+        // Update coordinates for next iteration
+        x += 1;
+        y += 1;
+
+        // Delay for a short period to control the speed
+        napms(90);
+    }
+    msleep(1000);
+}
+
 // Funktion zur Aktualisierung des Spiels
 void update() {
     // Bewege das Hindernis nach links
     obstacleX--;
+    //Vergangene Zeit
+    timeCount++;
+    
 
     // Überprüfe, ob das Hindernis den Spieler erreicht hat
     if (obstacleX == playerX && obstacleY == playerY) {
+        gameOverArt();
         gameOver = true;
         return;
+    }
+    //Überprüfe größeres Hinderniss nach Zeit
+    if (timeCount > lvl2){
+    if (obstacleX + 1 == playerX && obstacleY == playerY) {
+        mvprintw(textY +1 , textX, "GAME OVER *");
+        refresh();
+        msleep(2500);
+        gameOver = true;
+        return;
+    }
     }
 
     // Überprüfe, ob das Hindernis den linken Rand erreicht hat
@@ -103,6 +165,7 @@ void showSplashScreen() {
     clear();
 }
 
+
 void gameLoop() {
     // Initialisiere NCurses
     initscr();
@@ -125,6 +188,7 @@ void gameLoop() {
                 jump();
                 break;
             case 'q':
+                gameOverArt();
                 gameOver = true;
                 break;
         }
@@ -135,3 +199,4 @@ void gameLoop() {
     // Beende NCurses
     endwin();
 }
+
