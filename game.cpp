@@ -1,5 +1,6 @@
 #include "game.h"
 #include "util.h"
+#include "sound.h"
 #include <ncurses.h>
 
 //Text-und Zeitanzeige
@@ -37,7 +38,8 @@ void drawField() {
     clear();
 
     // Zeichne den Spieler
-    mvprintw(playerY, playerX, "P");
+   mvprintw(playerY, playerX, "P");
+
 
     if (timeCount > lvl2){
         mvprintw(obstacleY, obstacleX, "HH");
@@ -57,8 +59,7 @@ void drawField() {
     } else {
         mvprintw(textY, textX, " Level 1");
     }
-
-
+    
     refresh();
 }
 
@@ -70,6 +71,7 @@ void jump() {
     if (!isJumping) {
         isJumping = true;
         jumpCount = 0;
+        sound_play("roblox_jump.wav");
     }
 }
 
@@ -78,6 +80,8 @@ void gameOverArt() {
     int x = 0;
     int y = 0;
 
+    sound_play("game_over_sound.wav");
+    
     // Loop for moving the ASCII art
     for (int i = 0; i < 8; ++i) {
         clear();  // Clear the screen
@@ -117,9 +121,7 @@ void update() {
     //Überprüfe größeres Hinderniss nach Zeit
     if (timeCount > lvl2){
     if (obstacleX + 1 == playerX && obstacleY == playerY) {
-        mvprintw(textY +1 , textX, "GAME OVER *");
-        refresh();
-        msleep(2500);
+        gameOverArt();
         gameOver = true;
         return;
     }
@@ -165,7 +167,6 @@ void showSplashScreen() {
     clear();
 }
 
-
 void gameLoop() {
     // Initialisiere NCurses
     initscr();
@@ -199,4 +200,3 @@ void gameLoop() {
     // Beende NCurses
     endwin();
 }
-

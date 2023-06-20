@@ -1,0 +1,4 @@
+/home/main/Dokumente/BABABA/CMakeFiles/edit_cache.dir
+/home/main/Dokumente/BABABA/CMakeFiles/main.dir
+/home/main/Dokumente/BABABA/CMakeFiles/rebuild_cache.dir
+/home/main/Dokumente/BABABA/CMakeFiles/asciigfx.dir

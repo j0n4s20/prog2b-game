@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/main/Dokumente/BABABA/game.cpp
+game.h
+/home/main/Dokumente/BABABA/game.h
+util.h
+/home/main/Dokumente/BABABA/util.h
+sound.h
+/home/main/Dokumente/BABABA/sound.h
+ncurses.h
+-
+
+/home/main/Dokumente/BABABA/game.h
+
+gfx/math2d.h
+
+gfx/sound.h
+
+gfx/util.h
+stddef.h
+-
+math2d.h
+gfx/math2d.h
+
