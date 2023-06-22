@@ -3,6 +3,8 @@
 #include "sound.h"
 #include <ncurses.h>
 
+//hallo
+
 //Text-und Zeitanzeige
 int textX = 5;
 int textY = 0;
